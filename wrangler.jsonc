@@ -1,0 +1,10 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "tcn-chatbot-admin",
+  "main": ".output/server/index.mjs",
+  "compatibility_date": "2025-08-13",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".output/public",
+  },
+}

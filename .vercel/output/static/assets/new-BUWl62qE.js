@@ -1,0 +1,1 @@
+import{j as o,G as t}from"./main-CfFx-kRf.js";import{D as m}from"./document-form-Cw6DVX8q.js";import"./button-oB2r4dMc.js";import"./index-CVzN1HjY.js";import"./index-D17B44Z-.js";const c=function(){return o.jsx(m,{onSave:t})};export{c as component};

@@ -1,0 +1,16 @@
+{
+  "projectId": "prj_IxjPyokXw7h3KpJPM41wIJIE523Y",
+  "orgId": "team_lY9G4vxlNlYWZzgVTQFabtoL",
+  "projectName": "tcn-chatbot-admin",
+  "settings": {
+    "createdAt": 1755321772722,
+    "framework": "vite",
+    "devCommand": null,
+    "installCommand": null,
+    "buildCommand": null,
+    "outputDirectory": null,
+    "rootDirectory": null,
+    "directoryListing": false,
+    "nodeVersion": "22.x"
+  }
+}
