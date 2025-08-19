@@ -4,7 +4,13 @@ import React, { useRef, useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Send } from "lucide-react";
 import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport } from "ai";
+import {
+  DefaultChatTransport,
+  UIDataTypes,
+  UIMessage,
+  UIMessagePart,
+  UITools,
+} from "ai";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize from "rehype-sanitize";
@@ -14,6 +20,86 @@ import remarkGfm from "remark-gfm";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+
+function renderMessageParts(
+  parts: UIMessagePart<UIDataTypes, UITools>[],
+  messageId: string,
+) {
+  return parts.map((part, index) => {
+    if (part.type === "text") {
+      return (
+        <ReactMarkdown
+          key={`${messageId}-${index}`}
+          className="max-w-none break-words prose prose-sm prose-p:my-2 prose-pre:my-2 prose-pre:rounded-md prose-pre:bg-background/50 prose-pre:p-2 dark:prose-invert"
+          rehypePlugins={[
+            rehypeRaw,
+            rehypeSanitize,
+            [rehypeHighlight, { detect: true }],
+          ]}
+          remarkPlugins={[remarkGfm]}
+        >
+          {part.text}
+        </ReactMarkdown>
+      );
+    }
+    return null;
+  });
+}
+
+function renderMessage({
+  id,
+  role,
+  parts,
+  metadata,
+}: UIMessage<unknown, UIDataTypes, UITools>) {
+  const metadataAny = metadata as any;
+  const referencedChunks =
+    (metadataAny?.referencedChunks as { id: number }[]) || [];
+  return (
+    <div
+      key={id}
+      className={cn(
+        "flex flex-col gap-2",
+        role === "user" ? "items-end" : "items-start",
+      )}
+    >
+      <div
+        className={cn(
+          "max-w-[85%] rounded-lg px-3 py-2 text-sm shadow-md md:max-w-[75%] md:px-4 md:py-2",
+          role === "user"
+            ? "bg-primary text-primary-foreground"
+            : "bg-secondary text-secondary-foreground",
+        )}
+      >
+        {renderMessageParts(parts, id)}
+      </div>
+      {referencedChunks.length > 0 && (
+        <div className="flex flex-row flex-wrap gap-2">
+          {referencedChunks.map((chunk) => (
+            <Button
+              key={chunk.id}
+              variant="outline"
+              size="sm"
+              className="h-auto text-xs"
+            >
+              Chunk {chunk.id}
+            </Button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function renderTypingIndicator() {
+  return (
+    <div className="flex justify-start">
+      <div className="py-2 px-4 rounded-lg shadow-md bg-secondary text-secondary-foreground">
+        <span className="animate-pulse">Đang suy nghĩ...</span>
+      </div>
+    </div>
+  );
+}
 
 function ChatPage() {
   const { messages, sendMessage, status } = useChat({
@@ -56,48 +142,8 @@ function ChatPage() {
       {/* Message Area */}
       <div className="overflow-y-auto flex-1 p-4 pb-24 md:p-6">
         <div className="flex flex-col mx-auto space-y-4 max-w-4xl">
-          {messages.map(({ id, role, parts }) => (
-            <div
-              key={id}
-              className={cn(
-                "flex",
-                role === "user" ? "justify-end" : "justify-start",
-              )}
-            >
-              <div
-                className={cn(
-                  "max-w-[85%] rounded-lg px-3 py-2 text-sm shadow-md md:max-w-[75%] md:px-4 md:py-2",
-                  role === "user"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-secondary text-secondary-foreground",
-                )}
-              >
-                {parts.map((part, index) =>
-                  part.type === "text" ? (
-                    <ReactMarkdown
-                      key={`${id}-${index}`}
-                      className="max-w-none break-words prose prose-sm prose-p:my-2 prose-pre:my-2 prose-pre:rounded-md prose-pre:bg-background/50 prose-pre:p-2 dark:prose-invert"
-                      rehypePlugins={[
-                        rehypeRaw,
-                        rehypeSanitize,
-                        [rehypeHighlight, { detect: true }],
-                      ]}
-                      remarkPlugins={[remarkGfm]}
-                    >
-                      {part.text}
-                    </ReactMarkdown>
-                  ) : null,
-                )}
-              </div>
-            </div>
-          ))}
-          {status === "submitted" && (
-            <div className="flex justify-start">
-              <div className="py-2 px-4 rounded-lg shadow-md bg-secondary text-secondary-foreground">
-                <span className="animate-pulse">Đang suy nghĩ...</span>
-              </div>
-            </div>
-          )}
+          {messages.map(renderMessage)}
+          {status === "submitted" && renderTypingIndicator()}
           <div ref={messagesEndRef} />
         </div>
       </div>

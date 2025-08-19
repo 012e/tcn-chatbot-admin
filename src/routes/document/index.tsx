@@ -275,18 +275,16 @@ function RouteComponent() {
         }}
       >
         {docFromUrl && (
-          <DialogContent className="sm:max-w-3xl">
-            <>
-              <DialogHeader>
-                <DialogTitle>Document #{docFromUrl.id}</DialogTitle>
-              </DialogHeader>
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: docFromUrl.sanitizedContent,
-                }}
-              />{" "}
-              {/* The content is sanitized*/}
-            </>
+          <DialogContent className="flex flex-col sm:max-w-3xl h-[80vh]">
+            <DialogHeader>
+              <DialogTitle>Document #{docFromUrl.id}</DialogTitle>
+            </DialogHeader>
+            <div
+              className="overflow-y-auto"
+              dangerouslySetInnerHTML={{
+                __html: docFromUrl.sanitizedContent,
+              }}
+            />
           </DialogContent>
         )}
       </Dialog>
