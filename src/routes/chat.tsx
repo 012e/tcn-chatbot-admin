@@ -20,6 +20,7 @@ import remarkGfm from "remark-gfm";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 function renderMessageParts(
   parts: UIMessagePart<UIDataTypes, UITools>[],
@@ -106,6 +107,9 @@ function ChatPage() {
     transport: new DefaultChatTransport({
       api: import.meta.env.VITE_CHAT_ENDPOINT,
     }),
+    onError: (error) => {
+      toast.error("Đã xảy ra lỗi khi gửi tin nhắn: " + error.message);
+    },
   });
 
   const [input, setInput] = useState("");
