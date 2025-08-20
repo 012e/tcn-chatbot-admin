@@ -1,1 +1,0 @@
-import{u as s,r as e,a as n,l as a,j as r,O as u}from"./main-CfFx-kRf.js";import{u as m}from"./react-Y5zH9xhX.js";function i(){const o=s(),[t]=m(a);e.useEffect(()=>{(!t||!t.username||!t.password)&&o({to:"/login"})},[t,n,t==null?void 0:t.username,t==null?void 0:t.password])}const f=function(){return i(),r.jsx(u,{})};export{f as component};

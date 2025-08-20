@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^2.0.1",
+    "@ai-sdk/groq": "^2.0.11",
     "@ai-sdk/react": "^2.0.8",
     "@clerk/clerk-react": "^5.22.13",
     "@modelcontextprotocol/sdk": "^1.8.0",
@@ -80,4 +81,3 @@
     "web-vitals": "^4.2.4"
   }
 }
-
